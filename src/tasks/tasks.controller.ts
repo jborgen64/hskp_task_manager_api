@@ -1,14 +1,38 @@
-import { Controller, Get, Post, Put, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+} from '@nestjs/common';
+import { CreateTaskDTO } from './dto/create.tasks.dto';
 
 @Controller('tasks')
 export class TasksController {
-    @Get()
-    findAll(): string {
-        return 'Get all them tasks';
-    }
+  @Get()
+  findAll(): string {
+    return 'Get all them tasks';
+  }
 
-    @Post()
-    create(): string {
-        return 'Post all them tasks';
-    }
+  @Get(':id')
+  findOne(@Param() param): string {
+    return `tasks: ${param.id}`;
+  }
+
+  @Post()
+  create(@Body() createTaskDTO: CreateTaskDTO): string {
+    return `name: ${createTaskDTO.title} Desc: ${createTaskDTO.description}`;
+  }
+
+  @Delete(':id')
+  destroy(@Param() param): string {
+    return `destroy: ${param.id}`;
+  }
+
+  @Put(':id')
+  update(@Param() param): string {
+    return `update: ${param.id}`;
+  }
 }
