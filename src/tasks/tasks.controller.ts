@@ -8,6 +8,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { CreateTaskDTO } from './dto/create.tasks.dto';
+import { TasksService } from './tasks.service'
 
 @Controller('tasks')
 export class TasksController {
@@ -32,7 +33,7 @@ export class TasksController {
   }
 
   @Put(':id')
-  update(@Param() param): string {
-    return `update: ${param.id}`;
+  update(@Body() createTaskDTO: CreateTaskDTO): string {
+    return `update: ${createTaskDTO.title}`;
   }
 }
