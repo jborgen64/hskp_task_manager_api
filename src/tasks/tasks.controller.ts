@@ -8,18 +8,21 @@ import {
   Param,
 } from '@nestjs/common';
 import { CreateTaskDTO } from './dto/create.tasks.dto';
-import { TasksService } from './tasks.service'
+import { TasksService } from './tasks.service';
+import { Task } from './tasks.interface';
 
 @Controller('tasks')
 export class TasksController {
+    constructor(private readonly tasksService: TasksService) {}
+
   @Get()
-  findAll(): string {
-    return 'Get all them tasks';
+  findAll(): Task[] {
+    return this.tasksService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param() param): string {
-    return `tasks: ${param.id}`;
+  findOne(@Param('id') id): Task {
+    return this.tasksService.findOne(id);
   }
 
   @Post()
