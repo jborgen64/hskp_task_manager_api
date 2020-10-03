@@ -7,36 +7,36 @@ import {
   Body,
   Param,
 } from '@nestjs/common';
-import { CreateTaskDTO } from './dto/create.tasks.dto';
+import { taskDTO } from './task.dto';
 import { TasksService } from './tasks.service';
-import { Task } from './tasks.interface';
 
 @Controller('tasks')
 export class TasksController {
     constructor(private readonly tasksService: TasksService) {}
 
   @Get()
-  findAll(): Task[] {
-    return this.tasksService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id): Task {
-    return this.tasksService.findOne(id);
+  findAllTasks() {
+    return this.tasksService.showAll();
   }
 
   @Post()
-  create(@Body() createTaskDTO: CreateTaskDTO): string {
-    return `name: ${createTaskDTO.title} Desc: ${createTaskDTO.description}`;
-  }
+  createTask(@Body() data: taskDTO) {
+    return this.tasksService.create(data)
+  } 
 
-  @Delete(':id')
-  destroy(@Param() param): string {
-    return `destroy: ${param.id}`;
+  @Get(':id')
+  readTask(@Param('id') id: string) {
+    return this.tasksService.read(id);
   }
 
   @Put(':id')
-  update(@Body() createTaskDTO: CreateTaskDTO): string {
-    return `update: ${createTaskDTO.title}`;
+  updateTask(@Param('id') id: string, @Body() data: Partial<taskDTO>) {
+    return this.tasksService.update(id, data)
   }
+
+  @Delete(':id')
+  destroyTask(@Param('id') id: string) {
+    return this.tasksService.destroy(id)
+  }
+
 }

@@ -1,33 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import { Task } from './tasks.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TaskEntity } from './tasks.entity'
+import { Repository } from 'typeorm'
+import { taskDTO } from './task.dto'
 
 @Injectable()
 export class TasksService {
-  private readonly tasks: Task[] = [
-    {
-      id: '1',
-      title: 'task uno',
-      description: 'this is your first task',
-    },
+  constructor(
+    @InjectRepository(TaskEntity)
+    private taskRepository: Repository<TaskEntity>,
+    ) {}
 
-    {
-      id: '2',
-      title: 'task dos',
-      description: 'this is your second task',
-    },
+    async showAll() {
+      return await this.taskRepository.find();
+    }
 
-    {
-      id: '3',
-      title: 'task tres',
-      description: 'this is your third task',
-    },
-  ];
+    async create(data: taskDTO) {
+      const task = await this.taskRepository.create(data);
+      await this.taskRepository.save(task);
+      return task;
+    }
 
-  findAll(): Task[] {
-    return this.tasks;
-  }
+    async read(id: string) {
+      return await this.taskRepository.findOne({ where: { id } })
+    }
 
-  findOne(id: string): Task {
-    return this.tasks.find(task => task.id === id)
-  }
+    async update(id: string, data: Partial<taskDTO>) {
+      await this.taskRepository.update({ id }, data);
+      return await this.taskRepository.findOne( { id });
+    }
+
+    async destroy(id: string) {
+      await this.taskRepository.delete({id});
+      return { deleted: true};
+    }
 }
