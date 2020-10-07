@@ -3,10 +3,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { TasksModule } from './tasks/tasks.module';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpErrorFilter } from './shared/http_error.filter'
 
 @Module({
   imports: [TypeOrmModule.forRoot(), TasksModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+  provide: APP_FILTER,
+  useClass: HttpErrorFilter
+  }]
 })
 export class AppModule {}
